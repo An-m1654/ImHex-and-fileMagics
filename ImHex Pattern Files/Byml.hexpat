@@ -1,9 +1,9 @@
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        THIS PATTERN FILE IS VERY INCOMPLETE!
-        idk how to do the address thingies in imhex
-        so this will probably stay this way.
-        
-        Any help is appriciated.
+//      THIS PATTERN FILE IS VERY INCOMPLETE!
+//      idk how to do the address thingies in imhex
+//      so this will probably stay this way.
+//      
+//      Any help is appriciated.
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 

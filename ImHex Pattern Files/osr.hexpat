@@ -4,6 +4,7 @@
 
 #pragma author OMGasm (original) & AnmPro (lazer support)
 #pragma description Osu replay file
+#pragma MIME application/x-osu-replay
 
 #include <type/leb128.pat>
 #include <std/string.pat>
@@ -12,7 +13,13 @@
 #include <hex/dec.pat>
 #include <hex/type/json.pat>
 
-bool shouldDecompress_OverridesOthers in;
+std::print("If you want to decompress the replay data and score");
+std::print("info into their respective sections as well, then please");
+std::print("set those in the properties panel (Search it up in the");
+std::print("docs if you don't know what I'm talking about).");
+std::print(" ");
+
+bool _shouldDecompress_OverridesOthers in;
 
 bool shouldDecompressReplayData in;
 bool shouldDecompressScoreInfo in;
@@ -141,7 +148,6 @@ struct Key_or_mouse_pressed {
 std::mem::Section replay_data_section = std::mem::create_section("Replay Data");
 
 struct Replay_data_item {
-    // turn this into a searcher
     char msSincePrevStr[std::mem::find_string_in_range(0, $, std::mem::get_section_size(replay_data_section), "|") - $] [[hidden]];
     s128 msSincePrev = std::string::parse_int(msSincePrevStr, 10) [[export]];
     $ += 1;
@@ -175,7 +181,7 @@ struct Osu {
     u8 compressed_replay_data[compressed_replay_length]; // LZMA
     
     
-    if (shouldDecompress_OverridesOthers && shouldDecompressReplayData && hex::dec::lzma_decompress(compressed_replay_data, replay_data_section)) {
+    if (_shouldDecompress_OverridesOthers && shouldDecompressReplayData && hex::dec::lzma_decompress(compressed_replay_data, replay_data_section)) {
         Replay_data_item replay_data_items[while($ <= std::mem::get_section_size(replay_data_section))] @ 0x00 in replay_data_section;
     }
     
@@ -185,8 +191,7 @@ struct Osu {
         u32 online_score_id [[hex::editor_export]];
     }
     
-    // Doesn't seem to exist any more
-    // if (mods.TargetPractice) { double tp_hit_accuracy; }
+    if (mods.TargetPractice) { double tp_hit_accuracy; }
     
     if (version >= 30000001) {
         u32 compressed_score_info_length;
@@ -194,7 +199,7 @@ struct Osu {
         
         // Temp section to store decompressed data
         std::mem::Section score_info_section = std::mem::create_section("Score Info");
-        if (shouldDecompress_OverridesOthers && shouldDecompressScoreInfo && hex::dec::lzma_decompress(compressed_score_info_data, score_info_section)) {
+        if (_shouldDecompress_OverridesOthers && shouldDecompressScoreInfo && hex::dec::lzma_decompress(compressed_score_info_data, score_info_section)) {
             //char decompressed_score_info_data_in_score_info_section[std::mem::get_section_size(score_info_section)] @ 0x00 in score_info_section [[hidden]];
             hex::type::Json<std::mem::get_section_size(score_info_section)> decompressed_score_info_data @ 0x00 in score_info_section;
         }
